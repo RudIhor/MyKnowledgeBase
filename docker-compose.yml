@@ -1,0 +1,35 @@
+services:
+  app:
+    container_name: knowledge-base-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - knowledge-base-db-network
+    depends_on:
+      - db
+  db:
+    container_name: knowledge-base-db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - knowledge-base-db-network
+
+volumes:
+  db_data:
+    driver: local
+    name: knowledge_base_db_data
+
+networks:
+  knowledge-base-db-network:
+    driver: bridge
+    name: knowledge-base-db-network
