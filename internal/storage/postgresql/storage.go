@@ -18,7 +18,7 @@ import (
 var fs embed.FS
 
 type PostgresStore struct {
-	Db *gorm.DB
+	DB *gorm.DB
 }
 
 func NewPostgresStore() (*PostgresStore, error) {
@@ -41,7 +41,7 @@ func NewPostgresStore() (*PostgresStore, error) {
 		return nil, err
 	}
 	if err := m.Up(); err != migrate.ErrNoChange {
-		return nil, errors.New("Migrating failed")
+		return nil, err
 	}
 
 	return &PostgresStore{db}, nil
