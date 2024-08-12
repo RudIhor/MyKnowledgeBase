@@ -3,8 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/RivGames/my-knowledge-base/cmd/app"
+	"github.com/RivGames/my-knowledge-base/cmd/routes"
+	"github.com/RivGames/my-knowledge-base/config"
 	"github.com/RivGames/my-knowledge-base/internal/storage/postgresql"
+	"github.com/RivGames/my-knowledge-base/pkg/app"
 )
 
 func main() {
@@ -13,7 +15,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := app.NewServer(db)
+	app := app.NewApp(config.Envs, db)
+	router := routes.NewRouter(app)
 
-	server.Run()
+	router.ListenAndServe()
 }

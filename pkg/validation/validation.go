@@ -18,14 +18,12 @@ type CustomValidator struct {
 func NewCustomValidator() *CustomValidator {
 	en := en.New()
 	uni := ut.New(en, en)
+
 	trans, _ := uni.GetTranslator("en")
 	validate := validator.New()
 	en_translations.RegisterDefaultTranslations(validate, trans)
 
-	return &CustomValidator{
-		validator:  validate,
-		translator: trans,
-	}
+	return &CustomValidator{validator: validate, translator: trans}
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {

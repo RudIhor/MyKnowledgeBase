@@ -1,8 +1,13 @@
 package errs
 
-import "errors"
+import (
+	"net/http"
+)
 
 var (
-	ErrInvalidCredentials = errors.New("Invalid credentials.")
-	ErrSomethingWentWrong = errors.New("Something went wrong.")
+	ErrInvalidCredentials         = NewAPIError(http.StatusUnauthorized, "invalid credentials")
+	ErrInvalidToken               = NewAPIError(http.StatusUnauthorized, "invalid token")
+	ErrEmailAlreadyTaken          = NewAPIError(http.StatusUnprocessableEntity, "email has been already taken")
+	ErrEntityDoesNotBelongsToUser = NewAPIError(http.StatusForbidden, "entity doesn't belong to given user")
+	ErrUnableToBindRequest        = NewAPIError(http.StatusBadRequest, "unable to bind given request to struct")
 )

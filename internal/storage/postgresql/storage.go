@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
+	"time"
 
 	"github.com/RivGames/my-knowledge-base/config"
 	"github.com/golang-migrate/migrate/v4"
@@ -12,6 +14,7 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 //go:embed db/migrations/*.sql
@@ -23,7 +26,18 @@ type PostgresStore struct {
 
 func NewPostgresStore() (*PostgresStore, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", config.Envs.DBHost, config.Envs.DBUser, config.Envs.DBPassword, config.Envs.DBName, config.Envs.DBPort)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	logger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             time.Second,   // Slow SQL threshold
+			LogLevel:                  logger.Silent, // Log level
+			IgnoreRecordNotFoundError: true,          // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      true,          // Don't include params in the SQL log
+		},
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger,
+	})
 	if err != nil {
 		return nil, errors.New("Problem with connection to Postgres")
 	}
