@@ -27,15 +27,16 @@ func (s *QuestionService) CreateQuestion(c echo.Context, req *request.CreateQues
 	if err := c.Validate(req); err != nil {
 		return nil, err
 	}
+
 	return s.questionRepo.Create(req)
 }
 
-func (s *QuestionService) GetQuestionByID(id int) (*model.Question, error) {
+func (s *QuestionService) GetQuestionByID(id uint) (*model.Question, error) {
 	return s.questionRepo.FetchByID(id)
 }
 
-func (s *QuestionService) GetQuestionByIDAndUserID(c echo.Context, id int) (*model.Question, error) {
-	question, err := s.questionRepo.FetchByID(id)
+func (s *QuestionService) GetQuestionByIDAndUserID(c echo.Context, id uint) (*model.Question, error) {
+	question, err := s.GetQuestionByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (s *QuestionService) GetQuestionByIDAndUserID(c echo.Context, id int) (*mod
 	return question, nil
 }
 
-func (s *QuestionService) UpdateQuestionByID(c echo.Context, id int, req *request.UpdateQuestionRequest) (*model.Question, error) {
+func (s *QuestionService) UpdateQuestionByID(c echo.Context, id uint, req *request.UpdateQuestionRequest) (*model.Question, error) {
 	question, err := s.GetQuestionByIDAndUserID(c, id)
 	if err != nil {
 		return nil, errs.ErrEntityDoesNotBelongsToUser
@@ -59,7 +60,7 @@ func (s *QuestionService) UpdateQuestionByID(c echo.Context, id int, req *reques
 	return s.questionRepo.Update(question, req)
 }
 
-func (s *QuestionService) DeleteQuestionByID(c echo.Context, id int) error {
+func (s *QuestionService) DeleteQuestionByID(c echo.Context, id uint) error {
 	question, err := s.GetQuestionByIDAndUserID(c, id)
 	if err != nil {
 		return errs.ErrEntityDoesNotBelongsToUser

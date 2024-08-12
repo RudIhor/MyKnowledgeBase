@@ -53,10 +53,9 @@ func (r *Router) setupRoutes() {
 	apiV1.GET("/answers", controllers.GetAnswers)
 	apiV1.POST("/answers", controllers.CreateAnswer, middleware.WithAuthentication)
 	apiV1.GET("/answers/:id", controllers.GetAnswer)
-	apiV1.GET("/question/:id/answers", controllers.GetQuestionAnswers)
+	apiV1.GET("/question/:questionID/answers", controllers.GetQuestionAnswers)
 	apiV1.PUT("/answers/:id", controllers.UpdateAnswer, middleware.WithAuthentication)
 	apiV1.DELETE("/answers/:id", controllers.DeleteAnswer, middleware.WithAuthentication)
-
 }
 
 func (r *Router) listenAndServe() {

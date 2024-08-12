@@ -9,7 +9,7 @@ import (
 type QuestionRepository interface {
 	FetchAll() ([]model.Question, error)
 	Create(*request.CreateQuesitonRequest) (*model.Question, error)
-	FetchByID(int) (*model.Question, error)
+	FetchByID(uint) (*model.Question, error)
 	Update(*model.Question, *request.UpdateQuestionRequest) (*model.Question, error)
 	Delete(*model.Question) error
 }
@@ -31,7 +31,7 @@ func (r *QuestionRepo) FetchAll() ([]model.Question, error) {
 	return questions, nil
 }
 
-func (r *QuestionRepo) FetchByID(id int) (*model.Question, error) {
+func (r *QuestionRepo) FetchByID(id uint) (*model.Question, error) {
 	var question *model.Question
 	if err := r.db.First(&question, id).Error; err != nil {
 		return nil, err
