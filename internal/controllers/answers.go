@@ -22,7 +22,11 @@ func GetAnswers(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, answers)
+	response := model.Response{
+		"data": answers,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func CreateAnswer(c echo.Context) error {
@@ -83,7 +87,11 @@ func GetQuestionAnswers(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, answers)
+	response := model.Response{
+		"data": answers,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func UpdateAnswer(c echo.Context) error {

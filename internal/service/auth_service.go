@@ -26,7 +26,7 @@ func (a *AuthService) Register(c echo.Context, request *request.RegisterUserRequ
 	if err := c.Validate(request); err != nil {
 		return nil, err
 	}
-	user, err := a.userRepo.GetByEmail(request.Email)
+	user, err := a.userRepo.FetchByEmail(request.Email)
 	if user != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrEmailAlreadyTaken
 	}
@@ -40,7 +40,7 @@ func (a *AuthService) Login(c echo.Context, request *request.LoginUserRequest) (
 	if err := c.Validate(request); err != nil {
 		return nil, err
 	}
-	user, err := a.userRepo.GetByEmail(request.Email)
+	user, err := a.userRepo.FetchByEmail(request.Email)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errs.ErrInvalidCredentials
 	}

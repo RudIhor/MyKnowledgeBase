@@ -8,7 +8,8 @@ import (
 
 type UserRepository interface {
 	Fetch() ([]*model.User, error)
-	GetByEmail(string) (*model.User, error)
+	FetchById(uint) (*model.User, error)
+	FetchByEmail(string) (*model.User, error)
 	Create(*request.RegisterUserRequest) (*model.User, error)
 }
 
@@ -24,18 +25,27 @@ func (u *UserRepo) Fetch() ([]*model.User, error) {
 	return nil, nil
 }
 
-func (u *UserRepo) Create(req *request.RegisterUserRequest) (*model.User, error) {
-	user := &model.User{
-		RegisterUserRequest: *req,
+func (u *UserRepo) FetchById(id uint) (*model.User, error) {
+	var user *model.User
+	if err := u.db.Find(user, id).Error; err != nil {
+		return nil, err
 	}
-	return user, u.db.Create(user).Error
+
+	return user, nil
 }
 
-func (u *UserRepo) GetByEmail(email string) (*model.User, error) {
+func (u *UserRepo) FetchByEmail(email string) (*model.User, error) {
 	user := &model.User{}
 	if err := u.db.Where("email = ?", email).First(user).Error; err != nil {
 		return nil, err
 	}
 
 	return user, nil
+}
+
+func (u *UserRepo) Create(req *request.RegisterUserRequest) (*model.User, error) {
+	user := &model.User{
+		RegisterUserRequest: *req,
+	}
+	return user, u.db.Create(user).Error
 }

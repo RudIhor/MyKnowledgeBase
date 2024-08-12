@@ -30,17 +30,18 @@ func (r *Router) ListenAndServe() {
 }
 
 // Add Swagger
-// Add user relation to question
-// Add "data" wrapper to every response, except responses that contain only one message
+// Refactor: Extract bind and validate methods in one
 
 func (r *Router) setupRoutes() {
 	apiV1 := r.Echo.Group("/api/v1")
 
+	// Health
 	apiV1.GET("/up", controllers.Up)
 
 	// Auth
 	apiV1.POST("/register", controllers.Register)
 	apiV1.POST("/login", controllers.Login)
+	apiV1.GET("/me", controllers.Me)
 
 	// Questions
 	apiV1.GET("/questions", controllers.GetQuestions)

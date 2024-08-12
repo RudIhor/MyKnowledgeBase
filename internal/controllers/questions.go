@@ -23,7 +23,11 @@ func GetQuestions(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, questions)
+	response := model.Response{
+		"data": questions,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func CreateQuestion(c echo.Context) error {
